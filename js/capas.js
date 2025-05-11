@@ -122,7 +122,7 @@ map.on('load', () => {
     tiles: [
       'https://geoserver.thecrimsonlegacy.com/geoserver/deslizamientos/wms?' +
       'service=WMS&version=1.1.0&request=GetMap&layers=deslizamientos:suceptibilidad' +
-      '&styles=&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG:3857&format=image/png'
+      '&styles=&bbox={bbox-epsg-3857}&width=256&height=256&srs=EPSG:3857&format=image/png&TRANSPARENT=TRUE'
     ],
     tileSize: 256
   });
