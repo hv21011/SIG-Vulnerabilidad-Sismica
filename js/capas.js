@@ -11,10 +11,19 @@ const map = new maplibregl.Map({
 // Agregar control de navegación
 map.addControl(new maplibregl.NavigationControl());
 
+//Escala
+map.addControl(
+  new maplibregl.ScaleControl({
+    maxWidth: 100,
+    unit: 'metric' 
+  }),
+  'bottom-right' // Posición: esquina inferior derecha
+);
+
 // Definición de capas WFS (accesible para controlCapa.js)
 const capas = [
   ['sismos', 'Vulnerabilidad_Sismica:sismos_marn_2019_2024_pun', 'circle', {
-    'circle-color': '#cf010b',
+    'circle-color': '#d5b43c',
     'circle-radius': [
       'step', ['get', 'magnitud'],
       2, 3.1, 3,
@@ -23,7 +32,7 @@ const capas = [
       3.9, 6,
       4.3433, 7
     ],
-    'circle-opacity': 0.8,
+    'circle-opacity': 0.9,
     'circle-stroke-color': '#000',
     'circle-stroke-width': 0.5
   }],
@@ -55,13 +64,16 @@ const capas = [
       'Mayor que 530 (Gal)', '#a91016',
       '#67000d'
     ],
-    'fill-opacity': 0.9,
+    'fill-opacity': 0.8,
     'fill-outline-color': '#333'
   }],
   ['distritos', 'Vulnerabilidad_Sismica:distritos_pol', 'fill', {
     'fill-color': '#FEB24C',
-    'fill-opacity': 0.5,
-    'fill-outline-color': '#000'
+    'fill-opacity': 0.3,
+  }],
+  ['distritos_borde', 'Vulnerabilidad_Sismica:distritos_pol', 'line', {
+    'line-color': '#e63f0e',      // Color del borde
+    'line-width': 0.8             // Grosor del borde
   }],
   ['agua', 'Vulnerabilidad_Sismica:cuerpos_agua_pol', 'fill', {
     'fill-color': '#7fcdbb',
@@ -70,7 +82,7 @@ const capas = [
   }],
   ['vias', 'Vulnerabilidad_Sismica:vias_principales_lin', 'line', {
     'line-color': '#ffffff',
-    'line-width': 3
+    'line-width': 3,
   }],
   ['fallas', 'Vulnerabilidad_Sismica:fallas_geologicas_lin', 'line', {
     'line-color': '#491e00',
@@ -80,7 +92,7 @@ const capas = [
 ];
 
 // Orden de prioridad de capas (accesible para popup.js)
-const ordenPrioridad = ['distritos','amenaza', 'deslizamientos-raster', 'agua', 'viviendas', 'vias', 'fallas','sismos'];
+const ordenPrioridad = ['distritos', 'distritos_borde', 'amenaza', 'deslizamientos-raster', 'agua', 'viviendas', 'vias', 'fallas','sismos'];
 
 
 map.on('load', () => {
@@ -99,6 +111,20 @@ map.on('load', () => {
     source: 'base-raster'
   });
 
+  // Añadir fuente de terreno (DEM)
+  map.addSource('maplibre-dem', {
+    type: 'raster-dem',
+    url: 'https://api.maptiler.com/tiles/terrain-rgb/tiles.json?key=gfXnqgYat2OMneTvKs3L',
+    tileSize: 256,
+    maxzoom: 14
+  });
+
+  // Establecer terreno
+  map.setTerrain({
+    source: 'maplibre-dem',
+    exaggeration: 3.5
+  });
+
   // Agregar fuentes y capas WFS
   capas.forEach(([id, layerName, type, paint]) => {
     map.addSource(id, {
@@ -111,7 +137,7 @@ map.on('load', () => {
       source: id,
       paint,
       layout: { // Visibilidad inicial por capa
-        visibility: ['distritos', 'agua', 'vias'].includes(id) ? 'visible' : 'none'
+        visibility: ['distritos', 'agua', 'vias', 'distritos_borde'].includes(id) ? 'visible' : 'none'
       }
     });
   });
@@ -136,16 +162,19 @@ map.on('load', () => {
     }
   });
 
-  //JERARQUIA
-  map.moveLayer('base-raster-layer');
-  map.moveLayer('deslizamientos-raster');
-  map.moveLayer('distritos');
-  map.moveLayer('amenaza');
-  map.moveLayer('agua');
-  map.moveLayer('viviendas');
-  map.moveLayer('vias');
-  map.moveLayer('fallas');
-  map.moveLayer('sismos');
+  // JERARQUÍA (Asegúrate de que tu base-raster-layer esté al fondo)
+  if (map.getLayer('base-raster-layer')) map.moveLayer('base-raster-layer'); // Mover al fondo absoluto
+
+  // Mover las demás capas encima de la base raster
+  const layersToMoveUp = [
+    'deslizamientos-raster', 'distritos', 'distritos_borde', 'amenaza', 'agua',
+    'viviendas', 'vias', 'fallas', 'sismos'
+  ];
+  layersToMoveUp.forEach(layerId => {
+    if (map.getLayer(layerId)) {
+      map.moveLayer(layerId); // Mueve la capa al tope; el orden en que se llaman establece su apilamiento
+    }
+  });
 
   // Evento para indicar que el mapa y las capas están cargadas
   const event = new Event('mapaready');

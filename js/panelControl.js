@@ -17,8 +17,8 @@ document.addEventListener('mapaready', () => {
         toggle3DButton.addEventListener('click', function () {
             vista3DActiva = !vista3DActiva;
             map.easeTo({
-              pitch: vista3DActiva ? 50 : 0,
-              bearing: vista3DActiva ? -10 : 0,
+              pitch: vista3DActiva ? 75 : 0,
+              bearing: vista3DActiva ? 0 : 0,
               duration: 1000
             });
             this.textContent = vista3DActiva ? 'Desactivar perspectiva 3D' : 'Activar perspectiva 3D';
@@ -52,6 +52,7 @@ document.addEventListener('mapaready', () => {
 
         chk.addEventListener('change', (e) => {
           map.setLayoutProperty(id, 'visibility', e.target.checked ? 'visible' : 'none');
+          map.triggerRepaint();
         });
       }
     });
