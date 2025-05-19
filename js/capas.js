@@ -103,7 +103,7 @@ map.on('load', () => {
   capas.forEach(([id, layerName, type, paint]) => {
     map.addSource(id, {
       type: 'geojson',
-      data: `https://geoserver.thecrimsonlegacy.com/geoserver/Vulnerabilidad_Sismica/wfs?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application/json&typeName=${layerName}`
+      data: `https://geoserver.thecrimsonlegacy.com/geoserver/Vulnerabilidad_Sismica/wfs?service=WFS&version=1.0.0&request=GetFeature&outputFormat=application/json&typeName=${layerName}&srsName=EPSG:4326`
     });
     map.addLayer({
       id,

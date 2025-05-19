@@ -27,6 +27,10 @@ document.addEventListener('mapaready', () => {
           } else if (capaId === 'viviendas') {
             html = `
               <strong>Viviendas vulnerables</strong><br>
+              <b>Departamento:</b> ${props.Nombre_departamento}<br>
+              <b>Municipio:</b> ${props.Nombre_municipio}<br>
+              <b>Distrito:</b> ${props.Nombre_distrito}<br>
+              <b>Tipo de zona:</b> ${props.class}<br>
               <b>N° Personas:</b> ${props.SUM_personas}<br>
               <b>N° Casas de concreto:</b> ${props.CONCRETO_O}<br>
               <b>N° Casas otro material:</b> ${props.OTROS}
