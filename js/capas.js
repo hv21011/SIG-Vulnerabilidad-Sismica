@@ -87,7 +87,6 @@ const capas = [
   ['fallas', 'Vulnerabilidad_Sismica:fallas_geologicas_lin', 'line', {
     'line-color': '#491e00',
     'line-width': 2,
-    'line-dasharray': [4, 4]
   }],
 ];
 
