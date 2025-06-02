@@ -91,7 +91,7 @@ const capas = [
 ];
 
 // Orden de prioridad de capas (accesible para popup.js)
-const ordenPrioridad = ['distritos', 'distritos_borde', 'amenaza', 'deslizamientos-raster', 'agua', 'viviendas', 'vias', 'fallas','sismos'];
+const ordenPrioridad = ['distritos', 'distritos_borde', 'amenaza', 'deslizamientos-raster', 'viviendas', 'agua', 'vias', 'fallas','sismos'];
 
 
 map.on('load', () => {
