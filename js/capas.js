@@ -166,8 +166,8 @@ map.on('load', () => {
 
   // Mover las demás capas encima de la base raster
   const layersToMoveUp = [
-    'deslizamientos-raster', 'distritos', 'distritos_borde', 'amenaza', 'agua',
-    'viviendas', 'vias', 'fallas', 'sismos'
+    'deslizamientos-raster', 'distritos', 'distritos_borde', 'amenaza',
+    'viviendas', 'agua', 'vias', 'fallas', 'sismos'
   ];
   layersToMoveUp.forEach(layerId => {
     if (map.getLayer(layerId)) {
